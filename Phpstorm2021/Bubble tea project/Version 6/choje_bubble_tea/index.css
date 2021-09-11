@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Patua+One&display=swap');
+
+header {
+    background-image: url('//possible_header_image.jpg');
+    background-repeat: no-repeat;
+}
+
+header > img {
+    float: left;
+}
+
+header > h1 {
+    position: relative;
+    top: 18px;
+    left: 10px;
+}
+
+h1 {
+    /*border: 3px solid purple;*/
+    font-family: 'Patua One', cursive;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+nav {
+    text-align: center;
+    display: block;
+    margin: auto;
+    padding: 10px;
+    border: 3px solid lightpink;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+}
+
+a {
+    margin: 5px 10px;
+}
+
+nav > a {
+    padding: 5px;
+    text-decoration: none;
+    margin: 5px 40px;
+    display: inline-block;
+    font-weight: bold;
+    /*border: 2px solid plum;*/
+}
+
+nav> a:hover {
+    color: grey;
+}
+
+img {
+    /*border: 5px solid plum;*/
+    border-radius: 15px;
+}
+
+.login {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.search_bubbleteas {
+    width: 80%;
+    margin: auto;
+}
+
+table {
+    border: 2px solid plum;
+    width: 80%;
+    margin: auto;
+}
+
+td {
+    border: 2px solid lightsteelblue;
+
+}
+
+.error_msg {
+    color: red;
+}
+
+h2 {
+    text-align: center;
+    font-family: 'Patua One', cursive;
+}
+
+title {
+    font-family: 'Patua One', cursive;
+}
+
+div {
+    border: 3px solid mediumpurple;
+    padding: 10px
+}
+
+form {
+    border: 3px solid plum;
+}
+
+.login {
+    width: 40%;
+    margin: auto;
+}
