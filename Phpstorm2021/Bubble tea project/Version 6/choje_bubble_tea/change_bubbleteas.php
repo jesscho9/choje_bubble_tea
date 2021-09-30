@@ -6,17 +6,17 @@ $con = mysqli_connect("localhost", "choje", "grayhen60", "choje_bubble_tea");
 if(mysqli_connect_errno()){
     echo "Failed to connect to MySQL:".mysqli_connect_error(); die();}
 else{
-    echo "connected to database";
+    echo "<span style='visibility: hidden'>connected to database</span>";
 
 }
 
 
 if(isset($_GET['drinkid'])){
     $drink_id = $_GET['drinkid'];
+    // This variable sets the screen mode and tells the user whether they are in the edit or add function
     $screen_mode = "Edit";
-    // Product info query to get all product information where the product ID is what the user has selected
+    // Drink info query to get all drink information where the Drink ID is equal to what the user has selected
     $drink_info_query = "SELECT * FROM drinks WHERE DrinkID = '" . $drink_id . "'";
-    echo $drink_info_query;
     $drink_info_result = mysqli_query($con, $drink_info_query);
     $drink_info_record = mysqli_fetch_assoc($drink_info_result);
 }else {
@@ -29,15 +29,12 @@ $all_drinktypes_query = "SELECT * FROM `drinktypes`";
 $all_drinktypes_result = mysqli_query($con, $all_drinktypes_query);
 
 
-// Checks whether the user has logged in or not.
+// Checks whether the user has logged in or not
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
-    echo "You are a VIP!";
-    // TODO redirect user to error page
+    echo "<br><span>You're a VIP!</span>";
 } else {
-    echo "Please log in first to see this page.";
+    header("Location: error_page.php");
 }
-
-
 
 ?>
 
@@ -53,16 +50,27 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
 </head>
 <body>
 <header>
+    <h1><a href="index1.php"><img src="images/logo.jpg" alt="bubbletea_logo" width=4%/>珍珠岛</a></h1>
+    <h3>Pearl Island</h3>
     <nav>
         <a href="index1.php">HOME</a>
         <a href="menu1.php">MENU</a>
         <a href="specials.php">SPECIALS</a>
-        <a href="login.php">LOGIN</a>
+        <?php
+        // Changes navigation links based on whether the user has logged in or not
+        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
+            ?>
+            <a href="change_bubbleteas.php">ADD BUBBLE TEA</a>
+            <a href="process_logout1.php">LOGOUT</a>
+            <?php
+        } else {
+            echo "<a href=\"login.php\">LOGIN</a>";
+        }
+        ?>
     </nav>
 </header>
 <main>
-    <h2>Hello! Privileged and honourary member of the Pearl Island family, welcome</h2>
-
+    <h2>Welcome, privileged and honourary member of the Pearl Island family</h2>
     <h2>
         <?php
         echo $screen_mode;
@@ -72,11 +80,14 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
     <form action="insert_bubbleateas1.php" name='change_bubbletea' method="post">
         <input type="hidden" id="DrinkID" name="DrinkID"
         <?php
+        // If statement is for edit function, and gets values from what the user has selected to set as default values
         if($drink_info_record != NULL){
             echo " value=\"" . $drink_info_record['DrinkID'] . "\"";
         }
         ?>
         ><br>
+        <!-- maxlength sets max length of characters within the text input, required=required means user can't leave it
+        empty-->
         Drink Name: <input type="text" id="Name" name="Name"
         <?php
         if($drink_info_record != NULL){
@@ -98,20 +109,22 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
             }
             ?>
         </select><br>
+        <!-- onchange is called when user changes the regular price, this calls a javascript function below,
+        step="any" allows user to enter in decimals -->
         Regular Price: <input type="number" id="RPrice"
         <?php
         if($drink_info_record != NULL){
             echo "value=\"" . $drink_info_record['RPrice'] . "\"";
         }
         ?>
-        onchange="RPricechanged();" min="1" max="1000" step="any" name="RPrice" required="required"><br>
+        onchange="RPricechanged();" min="1" max="99" step="any" name="RPrice" required="required"><br>
         Large Price: <input type="number" id="LPrice"
         <?php
         if($drink_info_record != NULL){
             echo "value=\"" . $drink_info_record['LPrice'] . "\"";
         }
         ?>
-        onchange="LPricechanged();" max="1000" name="LPrice" required="required"><br>
+        onchange="LPricechanged();" max="100" name="LPrice" required="required"><br>
         Can this drink be warm?
         <input type="radio" onchange="Canbehotchanged();" name="CanBeHot" value="Y"
             <?php
@@ -127,22 +140,29 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
             }
             ?>
         >No
-        <span class="error_msg" id="CanBeHotErrorMsg" name="CanBeHotErrorMsg" style="visibility: hidden"><br>Please select whether the bubble tea can be hot</span>
-        <span class="error_msg" id="RPriceErrorMsg" name="RPriceErrorMsg" style="visibility: hidden"><br>The regular price must be between $1 and $1000. </span>
-        <span class="error_msg" id="LPriceErrorMsg" name="LPriceErrorMsg" style="visibility: hidden"><br>The large price must be larger than the regular price but below $1000. </span>
-        <p style="color:red" style="visibility: hidden">This is a paragraph.</p>
+        <!-- possible error messages below that will appear if the user has entered invalid input -->
+        <span class="error_msg" id="CanBeHotErrorMsg" name="CanBeHotErrorMsg" style="visibility: hidden"><br>Please select whether the bubble tea can be hot or not</span>
+        <span class="error_msg" id="RPriceErrorMsg" name="RPriceErrorMsg" style="visibility: hidden"><br>The regular price must be between $1 and $99. </span>
+        <span class="error_msg" id="LPriceErrorMsg" name="LPriceErrorMsg" style="visibility: hidden"><br>The large price must be larger than the regular price but below $100. </span>
         <br>
-        <input type="submit" onclick="return validate();" value="Add/Edit">
+        <input type="submit" onclick="return validate();" value="
+        <?php
+        // sets the button value as either edit or add depending on what the user clicked to come onto this page
+        echo $screen_mode;
+        ?>
+        ">
     </form>
 
 </main>
+<!-- javascript functions below used to validate the users' input -->
 <script type="text/javascript">
 function validate() {
+    // Setting a variable and getting it from the form above
     var CanBeHotChecked = document.querySelector('input[name="CanBeHot"]:checked');
+    // 3 equal signs used to check if something is equal to something in javascript, null means not selected
     if (CanBeHotChecked === null){
         var CanBeHotErrorMessage = document.getElementById("CanBeHotErrorMsg");
         if (CanBeHotErrorMessage !== null) {
-            console.log('error message setting if its not nothing');
             CanBeHotErrorMessage.style.visibility = "visible";
         }
         return false;
@@ -162,22 +182,21 @@ function RPricechanged() {
     var LPriceField = document.getElementById("LPrice");
     if (RPriceField !== null && LPriceField !== null) {
         var RPriceValue = parseFloat(RPriceField.value);
-        console.log(RPriceValue);
         if (RPriceValue !== "") {
-            console.log('RPrice is something');
             var RPriceErrorMessage = document.getElementById("RPriceErrorMsg");
+            // Checks the regular price and will set the error message to visible if regular price is below or above the minimum and maximum set values
             if (RPriceValue < parseFloat(RPriceField.min) || RPriceValue > parseFloat(RPriceField.max)) {
                 if (RPriceErrorMessage !== null) {
-                    console.log('the RPrice error message' + RPriceErrorMessage);
                     RPriceErrorMessage.style.visibility = "visible";
                 }
             }
             else {
-                console.log('rprice should be hidden');
                 RPriceErrorMessage.style.visibility = "hidden";
             }
         }
+        // Sets the minimum value of the large price to be equal to the regular price the user has entered after being successfully validated
         LPriceField.min = RPriceValue;
+        // Calls the large price function again to validate large price, ensures that user doesnt change the regular price after setting the large price
         LPricechanged();
     }
 }
@@ -191,6 +210,7 @@ function LPricechanged() {
         if (LPriceField !== null) {
             console.log('LPrice is something');
             var LPriceErrorMessage = document.getElementById("LPriceErrorMsg");
+            // Checks the large price and will set the error message to visible if large price is below or above the minimum and maximum set values
             if (LPriveValue < parseFloat(RPriceValue) || LPriveValue > parseFloat(LPriceField.max)) {
                 if (LPriceErrorMessage !== null) {
                     LPriceErrorMessage.style.visibility = "visible";
@@ -205,8 +225,4 @@ function LPricechanged() {
 
 </script>
 </body>
-<footer>
-
-</footer>
-
 </html>

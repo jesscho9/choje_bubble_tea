@@ -8,19 +8,20 @@ else{
 
 }
 
-$delete_bubbletea = "DELETE FROM drinks WHERE DrinkID='$_GET[DrinkID]'";
+// delete bubble tea query getting the drink id that the user chose from the menu page
+$delete_bubbletea_query = "DELETE FROM drinks WHERE DrinkID='$_GET[DrinkID]'";
 
-if(!mysqli_query($con, $delete_bubbletea))
+if(!mysqli_query($con, $delete_bubbletea_query))
 {
     echo 'Not deleted';
 }
 
 else{
-    echo 'Deleted';
+    echo "<br>". 'Drink successfully deleted';
 }
 
-header("refresh:10; url = menu1.php");
-
+// redirects the user to the menu page after selected drink has been deleted
+header("refresh:3; url = menu1.php");
 
 ?>
 

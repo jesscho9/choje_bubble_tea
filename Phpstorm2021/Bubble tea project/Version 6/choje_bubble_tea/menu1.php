@@ -7,7 +7,7 @@ $con = mysqli_connect("localhost", "choje", "grayhen60", "choje_bubble_tea");
 if(mysqli_connect_errno()){
     echo "Failed to connect to MySQL:".mysqli_connect_error(); die();}
 else{
-    echo "connected to database";
+    echo "<span style='visibility: hidden'>connected to database</span>";
 
 }
 
@@ -56,31 +56,28 @@ if(isset($_GET['search_button'])){
 <html lang="en">
 <head>
     <title>
-        珍珠岛 Pearl Island Menu
+        Pearl Island Menu
     </title>
     <meta charset="utf-8">
     <link rel='stylesheet' type='text/css' href='index.css'>
 </head>
 <body>
 <header>
-    <img alt="Bubble Tea logo" src="logo.jpg" width=4%>
-    <h1>珍珠岛 Pearl Island!!!!!</h1>
+    <h1><a href="index1.php"><img src="images/logo.jpg" alt="bubbletea_logo" width=4%/>珍珠岛</a></h1>
+    <h3>Pearl Island</h3>
     <nav>
         <a href="index1.php">HOME</a>
         <a href="menu1.php">MENU</a>
         <a href="specials.php">SPECIALS</a>
-        <a href="login.php">LOGIN</a>
         <?php
         // Checks whether the user has successfully logged in or not and if they have then displays extra navigation links below
         if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
             ?>
-            <a href="change_bubbleteas.php">Add Bubble Teas</a>
-            <a href="update_bubbleteas.php">Update Bubble Teas</a>
-            <a href="process_logout.php">LOGOUT</a>
-            <?php
+            <a href="change_bubbleteas.php">ADD BUBBLE TEA</a>
+            <a href="process_logout1.php">LOGOUT</a>
+        <?php
         } else {
-            // TODO do i need to have an else??????? bad practice? smth to check
-            echo "<br>not logged in";
+            echo "<a href=\"login.php\">LOGIN</a>";
         }
         ?>
 
@@ -129,9 +126,6 @@ if(isset($_GET['search_button'])){
                     </td>
                 </tr>
                 <tr>
-                    <td> cost range? </td>
-                </tr>
-                <tr>
                     <td>Only include hot bubble teas</td>
                     <td>
                         <input type="checkbox" name='hot_bubbleteas' value="false" unchecked
@@ -161,20 +155,6 @@ if(isset($_GET['search_button'])){
                                 }
                                 ?>
                             >Name Descending</option>
-                            <!--<option value="cost_asc"
-                                <?php
-                                if($order_bubbleteas == "cost_asc") {
-                                    echo " selected='selected'";
-                                }
-                                ?>
-                            >Cost Ascending</option>
-                            <option value="cost_desc"
-                                <?php
-                                if($order_bubbleteas == "cost_desc") {
-                                    echo " selected='selected'";
-                                }
-                                ?>
-                            >Cost Descending</option>-->
                         </select>
                     </td>
                 </tr>
@@ -205,7 +185,6 @@ if(isset($_GET['search_button'])){
 
     // All products query to get all products from the database, and will display certain values to the user
     $all_drinks_query = "SELECT * FROM drinks";
-    echo "this is the drink type id ".$drink_type_id;
     if ($drink_type_id != "") {
         $all_drinks_query = $all_drinks_query . " WHERE DrinkType = '" . $drink_type_id . "'";
         $arguments_added = true;
@@ -220,18 +199,6 @@ if(isset($_GET['search_button'])){
         $all_drinks_query = $all_drinks_query . "Name LIKE '%$product_name%'";
         $arguments_added = true;
     }
-    /*
-    if ($max_cost != "") {
-        if ($arguments_added == true) {
-            $all_drinks_query = $all_drinks_query . " AND ";
-        } else {
-            $all_drinks_query = $all_drinks_query . " WHERE ";
-        }
-
-        $all_drinks_query = $all_drinks_query . "Cost <= " . $max_cost;
-        $arguments_added = true;
-    }
-    */
     if ($hot_bubbleteas == True) {
         if ($arguments_added == true) {
             $all_drinks_query = $all_drinks_query . " AND ";
@@ -243,21 +210,13 @@ if(isset($_GET['search_button'])){
         $arguments_added = true;
     }
     $all_drinks_query = $all_drinks_query . " ORDER BY ";
-    if ($order_bubbleteas == "product_name_asc" or $order_bubbleteas == "product_name_desc") {
-        $all_drinks_query = $all_drinks_query . "Name ";
-    } /*else {
-        $all_drinks_query = $all_drinks_query . "Cost ";
-    }*/
-    if ($order_bubbleteas == "product_name_asc" or $order_bubbleteas == "cost_asc") {
-        $all_drinks_query = $all_drinks_query . "ASC";
-    } /*else {
-        $all_drinks_query = $all_drinks_query . "DESC";
-    }*/
-
+    if ($order_bubbleteas == "product_name_asc") {
+        $all_drinks_query = $all_drinks_query . "Name ASC";
+    } else {
+        $all_drinks_query = $all_drinks_query . "Name DESC";
+    }
     $all_drinks_result = mysqli_query($con, $all_drinks_query);
-    echo "<br>this is the drinks query ".$all_drinks_query;
         $count = mysqli_num_rows($all_drinks_result);
-        echo "<br>the count ".$count;
         if($count == 0) {
             echo "<br>There were no search results.";
         }else {
@@ -279,23 +238,38 @@ if(isset($_GET['search_button'])){
             </tr>
             <?php
             while ($row = mysqli_fetch_array($all_drinks_result)) {
+                if ($row['CanBeHot'] == "Y") {
+                    $CanBeHot = "Yes";
+                } else {
+                    $CanBeHot = "No";
+                }
                 echo "<tr>";
-                echo "<td>". $row['Name'] ."</td>";
-                echo "<td>". $row['RPrice'] ."</td>";
-                echo "<td>". $row['LPrice'] ."</td>";
-                echo "<td>". $row['CanBeHot'] ."</td>";
-                echo "<td><a href='change_bubbleteas.php?drinkid=". $row['DrinkID'] ."'>Edit</a></td>";
-                echo "<td><a href=delete.php?DrinkID=" .$row['DrinkID']. ">Delete</a></td>";
+                echo "<td>" . $row['Name'] . "</td>";
+                echo "<td>" . $row['RPrice'] . "</td>";
+                echo "<td>" . $row['LPrice'] . "</td>";
+                echo "<td>" . $CanBeHot . "</td>";
+                // Checks whether the user has logged in or not and if they have then displays the edit and delete functions
+                if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == True) {
+                    echo "<td><a href='change_bubbleteas.php?drinkid=" . $row['DrinkID'] . "'>Edit</a></td>";
+                    echo "<td><a href=delete.php?DrinkID=" . $row['DrinkID'] . " onclick=\"return deleteDrink();\">Delete</a></td>";
+                }
                 echo "</tr>";
             }
             ?>
         </table>
         <?php
-    }
-    ?>
+        }
+        ?>
 </main>
+<script>
+    function deleteDrink() {
+        var confirm_text = confirm("Are you sure you want to delete this drink?")
+        if (confirm_text === true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
 </body>
-<footer>
-
-</footer>
 </html>

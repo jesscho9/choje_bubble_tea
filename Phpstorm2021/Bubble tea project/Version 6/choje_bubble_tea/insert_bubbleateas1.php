@@ -9,41 +9,38 @@ else{
 
 }
 
+// gets the values entered in from the form by the user
 $DrinkID = $_POST['DrinkID'];
 $Name = $_POST['Name'];
 $DrinkType = $_POST['select_drinktype'];
 $RPrice = $_POST['RPrice'];
 $LPrice = $_POST['LPrice'];
 $CanBeHot = $_POST['CanBeHot'];
-echo "this is the can be hot value ". $CanBeHot;
-echo "drink type ". $DrinkType;
-echo "regular price ". $RPrice;
 
-// TODO INSERT AND UPDATE
-
-echo "this is the drinkid ".$DrinkID;
-
+// shows different queries for if the user wants to insert or update a bubble tea in the database
 if($DrinkID != ""){
-    $update_bubble_tea = "UPDATE drinks SET Name='$Name',DrinkType='$DrinkType',RPrice='$RPrice',LPrice='$LPrice',CanBeHot='$CanBeHot' WHERE DrinkID='$DrinkID'";
-    if(!mysqli_query($con, $update_bubble_tea))
+    // the query that allows the user to update a bubble tea in to the database
+    $update_bubble_tea_query = "UPDATE drinks SET Name='$Name',DrinkType='$DrinkType',RPrice='$RPrice',LPrice='$LPrice',CanBeHot='$CanBeHot' WHERE DrinkID='$DrinkID'";
+    if(!mysqli_query($con, $update_bubble_tea_query))
     {
         echo 'Not updated';
     }
     else
     {
         echo 'Updated';
-        header("refresh:6; url = change_bubbleteas.php");
+        header("refresh:6; url = menu1.php");
     }
 }else{
-    $insert_bubble_tea = "INSERT INTO drinks (Name, DrinkType, RPrice, LPrice, CanBeHot) VALUES ('$Name', '$DrinkType', '$RPrice', '$LPrice', '$CanBeHot')";
-    if(!mysqli_query($con, $insert_bubble_tea))
+    // the query that allows the user to add a bubble tea in to the database
+    $insert_bubble_tea_query = "INSERT INTO drinks (Name, DrinkType, RPrice, LPrice, CanBeHot) VALUES ('$Name', '$DrinkType', '$RPrice', '$LPrice', '$CanBeHot')";
+    if(!mysqli_query($con, $insert_bubble_tea_query))
     {
         echo 'Not inserted';
     }
     else
     {
         echo 'Inserted';
-        header("refresh:6; url = change_bubbleteas.php");
+        header("refresh:3; url = change_bubbleteas.php");
     }
 }
 

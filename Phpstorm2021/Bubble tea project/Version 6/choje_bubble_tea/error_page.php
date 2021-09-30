@@ -1,6 +1,5 @@
 
 <?php
-// WONT NEED NOW AS MENU CHECKS THIS??
 
 $con = mysqli_connect("localhost", "choje", "grayhen60", "choje_bubble_tea");
 if(mysqli_connect_errno()){
@@ -10,7 +9,9 @@ else{
 
 }
 
-echo "Please login to access this page";
-header("refresh:4; url = login.php");
+echo "<br>Please login to access this page";
+// redirects the user to the login page once user has been shown the error message above, indicating they have not logged in
+header("refresh:3; url = login.php");
 
 ?>
+

@@ -15,6 +15,7 @@ echo "<br>Bcrypt Password: " .$bcrypt_password;
 
 $user_types = 'Avocado';
 
+// will echo out the bcrypted password on this page
 $verify = password_verify($user_types, $bcrypt_password);
 echo "<br>";
 

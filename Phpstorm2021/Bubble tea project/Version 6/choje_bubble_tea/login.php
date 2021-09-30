@@ -24,15 +24,15 @@ else{
 <body>
 <header>
     <nav>
-        <img alt="Bubble Tea logo" src="logo.jpg" width=6%>
-        <h1>珍珠岛 Pearl Island</h1>
+        <h1><a href="index1.php"><img src="images/logo.jpg" alt="bubbletea_logo" width=4%/>珍珠岛</a></h1>
+        <h3>Pearl Island</h3>
         <a href="index1.php">HOME</a>
         <a href="menu1.php">MENU</a>
         <a href="specials.php">SPECIALS</a>
-        <a href="login.php">LOGIN</a>
     </nav>
 </header>
 <main>
+    <!-- the form allowing a user to log in -->
     <h2>Login Here</h2>
     <div class="login">
     <form name='login_form' method = 'post' action ='process_login.php'>
@@ -46,8 +46,7 @@ else{
     </form>
     </div>
 </main>
-</body>
-<footer>
 
-</footer>
+</body>
+</html>
 
